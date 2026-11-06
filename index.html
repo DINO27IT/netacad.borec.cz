@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Netacad</title>
+  <!-- Ochrana před vyhledávači a roboty -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Všechny odkazy striktně černé (žádná fialová barva) */
+    a, a:link, a:visited {
+      color: black !important;
+      text-decoration: none;
+    }
+    a:hover {
+      color: grey !important;
+    }
+
+    /* Fullscreen PDF overlay - přesně 100% okna bez 100vw bugu */
+    #pdfOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999999;
+      background: #525659;
+    }
+    #pdfFrame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+    .ptsa-clean-filter {
+      margin: 6px 0 8px 12px;
+      font-size: 12px;
+      color: #333;
+    }
+    .ptsa-clean-filter select {
+      font-family: Tahoma;
+      font-size: 11px;
+      padding: 1px 3px;
+      background: #fff;
+      border: 1px solid #aaa;
+    }
+    .ptsa-clean-filter button {
+      font-family: Tahoma;
+      font-size: 11px;
+      padding: 1px 8px;
+      cursor: pointer;
+      background: #f0f0f0;
+      border: 1px solid #999;
+      font-weight: bold;
+    }
+    .ptsa-clean-filter button:hover {
+      background: #e0e0e0;
+    }
+    .ptsa-table {
+      border-collapse: collapse;
+      font-size: 11.5px;
+      line-height: 1.4;
+      margin: 4px 0 6px 12px;
+    }
+    .ptsa-table td {
+      vertical-align: top;
+    }
+    /* Malá nenápadná šedá šipečka */
+    #filterArrow {
+      color: #888;
+      cursor: pointer;
+      font-size: 10px;
+      margin-left: 5px;
+      user-select: none;
+      display: inline-block;
+      vertical-align: middle;
+      padding: 0 3px;
+    }
+    #filterArrow:hover {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fullscreen Overlay Viewer -->
+  <div id="pdfOverlay">
+    <iframe id="pdfFrame" src="about:blank"></iframe>
+  </div>
+
+  <!-- Identická hlavička 1:1 s netacad.borec.cz -->
+  <h1 class="hlavninazev" style="margin:0"><a href="/">Cisco Networking Academy</a></h1>
+  <img class="ciscologo" src="cisco.png" alt="Cisco">
+  <br>
+  <hr style="margin:0">
+  <br>
+  <a href="javascript:void(0)">Odhlásit se</a>
+  <p class="nadpis">Počítačové sítě [POS]</p>
+
+  <ul>
+    <!-- CCNA1 -->
+    <li><span class="nadpis">CCNA1</span>
+      <ul>
+        <li><a href="javascript:void(0)">Exam Answers</a></li>
+        <li><a href="javascript:void(0)">Kurikule</a></li>
+        <li><a href="javascript:void(0)">Příkazy CCNA1 (revize 10/2026)</a></li>
+      </ul>
+    </li>
+
+    <!-- CCNA2 -->
+    <li><span class="nadpis">CCNA2</span>
+      <ul>
+        <li><a href="javascript:void(0)">Exam Answers</a></li>
+        <li><a href="javascript:void(0)">Kurikule</a></li>
+        <li>
+          <a href="javascript:void(0)" onclick="openVariant('default'); return false;"><span class="nadpis">Příkazy CCNA2</span></a>
+          <!-- Malá nenápadná šedá šipka pro rozbalení/sbalení filtru -->
+          <span id="filterArrow" onclick="toggleFilter();" title="Rozbalit / skrýt filtr">&#9656;</span>
+
+          <!-- Kompletní blok filtru a variant (ve výchozím stavu skrytý za šipkou) -->
+          <div id="completeFilterSection" style="display: none;">
+            <div class="ptsa-clean-filter">
+              Výběr zadání:
+              <select id="selTopo" onchange="updateFilter()">
+                <option value="0">0: RTR-1 (PC1-9)</option>
+                <option value="1">1: R-1 (Host 1-9)</option>
+                <option value="2">2: EdgeRouter (WS-1.1)</option>
+              </select>
+              <select id="selVlan" onchange="updateFilter()">
+                <option value="0">0: FL1..3 (VLAN 99)</option>
+                <option value="1">1: SALES..EXEC (VLAN 99)</option>
+                <option value="2">2: B1F1..4 (NetAdmin 99)</option>
+              </select>
+              <select id="selIp" onchange="updateFilter()">
+                <option value="0">0: 192.168.x.x</option>
+                <option value="1">1: 172.31.x.x</option>
+                <option value="2">2: 10.0.x.x</option>
+              </select>
+              <button type="button" id="btnFilter" onclick="openSelectedVariant()">Otevřít (000)</button>
+            </div>
+
+            <!-- Učesaný přehled 27 variant ve 3 sloupcích vedle sebe -->
+            <div id="variantsContainer">
+              <table class="ptsa-table">
+                <tr>
+          <td style="padding-right: 32px;">
+            <b>Skupina 0xx (RTR-1):</b>
+            <ul style="margin: 3px 0 0 0; padding-left: 16px;">
+              <li><a href="javascript:void(0)" onclick="openVariant('000'); return false;">prikazy_ccna2_000.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('001'); return false;">prikazy_ccna2_001.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('002'); return false;">prikazy_ccna2_002.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('010'); return false;">prikazy_ccna2_010.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('011'); return false;">prikazy_ccna2_011.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('012'); return false;">prikazy_ccna2_012.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('020'); return false;">prikazy_ccna2_020.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('021'); return false;">prikazy_ccna2_021.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('022'); return false;">prikazy_ccna2_022.pdf</a></li>
+            </ul>
+          </td>
+          <td style="padding-right: 32px;">
+            <b>Skupina 1xx (R-1):</b>
+            <ul style="margin: 3px 0 0 0; padding-left: 16px;">
+              <li><a href="javascript:void(0)" onclick="openVariant('100'); return false;">prikazy_ccna2_100.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('101'); return false;">prikazy_ccna2_101.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('102'); return false;">prikazy_ccna2_102.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('110'); return false;">prikazy_ccna2_110.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('111'); return false;">prikazy_ccna2_111.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('112'); return false;">prikazy_ccna2_112.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('120'); return false;">prikazy_ccna2_120.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('121'); return false;">prikazy_ccna2_121.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('122'); return false;">prikazy_ccna2_122.pdf</a></li>
+            </ul>
+          </td>
+          <td style="padding-right: 32px;">
+            <b>Skupina 2xx (EdgeRouter):</b>
+            <ul style="margin: 3px 0 0 0; padding-left: 16px;">
+              <li><a href="javascript:void(0)" onclick="openVariant('200'); return false;">prikazy_ccna2_200.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('201'); return false;">prikazy_ccna2_201.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('202'); return false;">prikazy_ccna2_202.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('210'); return false;">prikazy_ccna2_210.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('211'); return false;">prikazy_ccna2_211.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('212'); return false;">prikazy_ccna2_212.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('220'); return false;">prikazy_ccna2_220.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('221'); return false;">prikazy_ccna2_221.pdf</a></li>
+              <li><a href="javascript:void(0)" onclick="openVariant('222'); return false;">prikazy_ccna2_222.pdf</a></li>
+            </ul>
+          </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </li>
+
+    <!-- CCNA3 -->
+    <li><span class="nadpis">CCNA3</span>
+      <ul>
+        <li><a href="javascript:void(0)">Exam Answers</a></li>
+        <li><a href="javascript:void(0)">Kurikule</a></li>
+        <li><a href="javascript:void(0)">Příkazy CCNA3</a></li>
+      </ul>
+    </li>
+
+    <!-- Nástroje -->
+    <li style="margin-top: 6px;"><a href="javascript:void(0)">Subnet Calculator (1)</a></li>
+    <li><a href="javascript:void(0)">Subnet Calculator (2)</a></li>
+    <li><a href="javascript:void(0)">Subnetting Practice</a></li>
+    <li><a href="javascript:void(0)">Kalkulačka sítě</a></li>
+    <li><a href="javascript:void(0)">Magic osa</a></li>
+
+    <!-- Příkazy IOS -->
+    <li style="margin-top: 6px;"><a href="javascript:void(0)">Základní příkazy Cisco IOS (verze 2019)</a></li>
+    <li><a href="javascript:void(0)">Příkazy Cisco IOS (verze 2017)</a></li>
+    <li><a href="javascript:void(0)">Základní příkazy Cisco IOS (verze 2011)</a></li>
+
+    <!-- Packet Tracer NEW -->
+    <li style="margin-top: 6px;"><span class="nadpis">Packet Tracer NEW!! (doporučená verze)</span>
+      <ul>
+        <li><a href="javascript:void(0)">Download Packet Tracer 9.0.1</a></li>
+      </ul>
+    </li>
+
+    <!-- Packet Tracer - archív -->
+    <li style="margin-top: 6px;"><span class="nadpis">Packet Tracer - archív</span>
+      <ul>
+        <li><a href="javascript:void(0)">Download Packet Tracer 9.0.0</a></li>
+        <li><a href="javascript:void(0)">Download Packet Tracer 8.2.2</a></li>
+        <li><a href="javascript:void(0)">Download Packet Tracer 8.2.1</a></li>
+        <li><a href="javascript:void(0)">Download Packet Tracer 8.2.0</a></li>
+        <li><a href="javascript:void(0)">Download Packet Tracer 8.1.1</a></li>
+        <li><a href="javascript:void(0)">Download Packet Tracer 8.1.0</a></li>
+      </ul>
+    </li>
+
+    <!-- Učební texty v CZ -->
+    <li style="margin-top: 6px;"><span class="nadpis">Učební texty v CZ</span>
+      <ul>
+        <li><a href="javascript:void(0)">CCNA1 CZ</a></li>
+        <li><a href="javascript:void(0)">CCNA2 CZ</a></li>
+        <li><a href="javascript:void(0)">CCNA3 CZ</a></li>
+      </ul>
+    </li>
+
+    <!-- Routování (starší kurikule) -->
+    <li style="margin-top: 6px;"><span class="nadpis">Routování (starší kurikule)</span>
+      <ul>
+        <li><a href="javascript:void(0)">NEW!! Dynamic Routing (web)</a></li>
+        <li><a href="javascript:void(0)">NEW!! RIP (web)</a></li>
+        <li><a href="javascript:void(0)">NEW!! EIGRP (web)</a></li>
+        <li><a href="javascript:void(0)">NEW!! Dynamic Routing (pdf)</a></li>
+        <li><a href="javascript:void(0)">NEW!! RIP (pdf)</a></li>
+        <li><a href="javascript:void(0)">NEW!! EIGRP (pdf)</a></li>
+      </ul>
+    </li>
+
+    <!-- Routování - Instructors Materials -->
+    <li style="margin-top: 6px;"><span class="nadpis">Routování - Instructors Materials</span>
+      <ul>
+        <li><a href="javascript:void(0)">Dynamic Routing (pdf)</a></li>
+        <li><a href="javascript:void(0)">EIGRP (pdf)</a></li>
+        <li><a href="javascript:void(0)">EIGRP Tuning and Troubleshooting (pdf)</a></li>
+        <li><a href="javascript:void(0)">Single-Area OSPF (pdf)</a></li>
+        <li><a href="javascript:void(0)">Multiarea OSPF (pdf)</a></li>
+        <li><a href="javascript:void(0)">OSPF Tuning and Troubleshooting (pdf)</a></li>
+      </ul>
+    </li>
+
+    <!-- Starší kurikule -->
+    <li style="margin-top: 6px;"><span class="nadpis">Starší kurikule</span>
+      <ul>
+        <li><a href="javascript:void(0)">CCNA1-4 (přístupné pouze ze školy)</a></li>
+      </ul>
+    </li>
+
+    <!-- Ústní maturitní zkoušky -->
+    <li style="margin-top: 6px;"><span class="nadpis">Ústní maturitní zkoušky</span>
+      <ul>
+        <li><a href="javascript:void(0)">Wi-Fi standardy</a></li>
+        <li><a href="javascript:void(0)">CAT cable standardy</a></li>
+        <li><a href="javascript:void(0)">Ethernet</a></li>
+        <li><a href="javascript:void(0)">Wi-Fi</a></li>
+        <li><a href="javascript:void(0)">Operační systémy - Windows server</a></li>
+        <li><a href="javascript:void(0)">NEW!! Licenční politika Windows</a></li>
+        <li><a href="javascript:void(0)">Operační systémy - Linux server</a></li>
+        <li><a href="javascript:void(0)">Operační systémy - Linux Terminál</a></li>
+        <li><a href="javascript:void(0)">Počítačové sítě - historie</a></li>
+        <li><a href="javascript:void(0)">Počítačové sítě - způsoby připojení k internetu</a></li>
+        <li><a href="javascript:void(0)">Maturitní helpdesk 2026 by Peťa & Matěj</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <script>
+    const CACHE_NAME = 'ccna-pdf-cache-v1';
+    const KEY_NAME = 'https://netacad.local/selected_file';
+    const TARGET_NAME = 'prikazy_ccna2.pdf';
+
+    // Registrace Service Workeru pro zachycení požadavků na webhostingu
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW error:', err));
+    }
+
+    function updateFilter() {
+      const t = document.getElementById("selTopo").value;
+      const v = document.getElementById("selVlan").value;
+      const i = document.getElementById("selIp").value;
+      document.getElementById("btnFilter").innerText = "Otevřít (" + t + v + i + ")";
+    }
+
+    function openSelectedVariant() {
+      const t = document.getElementById("selTopo").value;
+      const v = document.getElementById("selVlan").value;
+      const i = document.getElementById("selIp").value;
+      openVariant("" + t + v + i);
+    }
+
+    // Přepínání malé nenápadné šedé šipky
+    function toggleFilter() {
+      const section = document.getElementById("completeFilterSection");
+      const arrow = document.getElementById("filterArrow");
+      if (section.style.display === "none") {
+        section.style.display = "block";
+        arrow.innerHTML = "&#9662;"; // ▾
+      } else {
+        section.style.display = "none";
+        arrow.innerHTML = "&#9656;"; // ▸
+      }
+    }
+
+    // HLAVNÍ FUNKCE PRO OTEVŘENÍ PDF
+    function openVariant(code) {
+      const fileToOpen = (code === 'default') ? 'prikazy_ccna2.pdf' : ('prikazy_ccna/' + code + '/prikazy_ccna2.pdf');
+
+      // Uložit do cache pro Service Worker (webhosting)
+      if ('caches' in window) {
+        caches.open(CACHE_NAME).then(c => c.put(KEY_NAME, new Response(fileToOpen))).catch(() => {});
+      }
+      if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({ type: 'SET_VARIANT', file: fileToOpen });
+      }
+
+      // Zobrazit fullscreen overlay se správným scrollováním
+      const overlay = document.getElementById("pdfOverlay");
+      const frame = document.getElementById("pdfFrame");
+      
+      frame.src = fileToOpen + "#toolbar=1";
+      overlay.style.display = "block";
+      document.body.style.overflow = "hidden";
+      document.title = TARGET_NAME;
+
+      // Umožní návrat pomocí nativní šipky Zpět v prohlížeči (← v liště Chrome/Edge)
+      window.history.pushState({ isPdf: true, code: code }, TARGET_NAME, '#prikazy_ccna2.pdf');
+
+      setTimeout(() => {
+        try { frame.focus(); } catch(e) {}
+      }, 150);
+    }
+
+    // Zavření prohlížeče a návrat na původní stránku
+    function closeOverlay() {
+      const overlay = document.getElementById("pdfOverlay");
+      const frame = document.getElementById("pdfFrame");
+      overlay.style.display = "none";
+      frame.src = "about:blank";
+      document.body.style.overflow = "auto";
+      document.title = "Netacad";
+    }
+
+    // Obsluha nativní šipky Zpět v prohlížeči (← v levém horním rohu prohlížeče)
+    window.addEventListener("popstate", function(event) {
+      closeOverlay();
+    });
+
+    // Klávesa Esc pro okamžitý návrat
+    window.addEventListener("keydown", function(e) {
+      if (e.key === "Escape") {
+        const overlay = document.getElementById("pdfOverlay");
+        if (overlay && overlay.style.display === "block") {
+          window.history.back();
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

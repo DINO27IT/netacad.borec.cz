@@ -1,0 +1,44 @@
+* /*Globální nastavení pro všechny prvky*/
+{
+  font-family: Tahoma;
+  font-size: 100%;
+}
+
+a, a:link, a:visited /*Všechny odkazy zůstávají černé*/
+{
+  color: black;
+  text-decoration: none;
+}
+
+a:hover /*Odkazy po tom, co se na ně najedu myší*/
+{
+  color: grey;
+}
+
+body /*Tělo - pozadí*/
+{
+  background-color: white;
+}
+
+.hlavninazev /* "Cisco Networking Academy" */
+{
+  color: black;
+  font-weight: lighter;
+  font-size: 200%;
+}
+
+.nadpis /* Nadpisy jako CCNA1, CCNA2, ... atd */
+{
+  color: black;
+  font-weight: bold;
+  font-size: 100%;
+}
+
+.ciscologo
+{
+  position: absolute; 
+  right: 75px; 
+  top: 20px; 
+  width: 70px; 
+  height: 35px;
+}
